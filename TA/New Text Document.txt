@@ -1,0 +1,95 @@
+Building a Max Heap
+
+#include <iostream>
+#include <vector>
+
+class MaxHeap {
+private:
+    std::vector<int> heap;
+
+    // Helper function to heapify (maintain max-heap property)
+    void heapify(int index) {
+        int largest = index;
+        int leftChild = 2 * index + 1;
+        int rightChild = 2 * index + 2;
+
+        // Compare with left child
+        if (leftChild < heap.size() && heap[leftChild] > heap[largest]) {
+            largest = leftChild;
+        }
+
+        // Compare with right child
+        if (rightChild < heap.size() && heap[rightChild] > heap[largest]) {
+            largest = rightChild;
+        }
+
+        // If the largest is not the current index, swap and heapify the affected subtree
+        if (largest != index) {
+            std::swap(heap[index], heap[largest]);
+            heapify(largest);
+        }
+    }
+
+public:
+    // Function to insert an element into the heap
+    void insert(int x) {
+        heap.push_back(x);
+
+        // Heapify the tree bottom-up
+        int index = heap.size() - 1;
+        while (index > 0 && heap[(index - 1) / 2] < heap[index]) {
+            std::swap(heap[index], heap[(index - 1) / 2]);
+            index = (index - 1) / 2;
+        }
+    }
+
+    // Function to extract the maximum element from the heap
+    int extractMax() {
+        if (heap.empty()) {
+            std::cerr << "Heap is empty. Cannot extract max." << std::endl;
+            return -1;  // Return a sentinel value indicating an error
+        }
+
+        int maxElement = heap[0];
+        heap[0] = heap.back();
+        heap.pop_back();
+
+        // Heapify the tree top-down
+        heapify(0);
+
+        return maxElement;
+    }
+
+    // Function to get the maximum element without removing it
+    int getMax() {
+        if (heap.empty()) {
+            std::cerr << "Heap is empty. No max element." << std::endl;
+            return -1;  // Return a sentinel value indicating an error
+        }
+
+        return heap[0];
+    }
+};
+
+// Driver code
+int main() {
+    MaxHeap maxHeap;
+
+    // Insert elements into the max heap
+    maxHeap.insert(10);
+    maxHeap.insert(30);
+    maxHeap.insert(20);
+    maxHeap.insert(5);
+    maxHeap.insert(15);
+
+    // Print the max element without removing it
+    std::cout << "Max element: " << maxHeap.getMax() << std::endl;
+
+    // Extract and print the maximum element
+    std::cout << "Extracted max element: " << maxHeap.extractMax() << std::endl;
+
+    // Print the max element again after extraction
+    std::cout << "Max element after extraction: " << maxHeap.getMax() << std::endl;
+
+    return 0;
+}

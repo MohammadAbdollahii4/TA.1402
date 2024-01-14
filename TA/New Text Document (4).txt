@@ -1,0 +1,95 @@
+first BST question:
+
+#include <iostream>
+
+// Node structure
+struct Node {
+    int key;
+    Node* left;
+    Node* right;
+
+    Node(int value) : key(value), left(nullptr), right(nullptr) {}
+};
+
+// Function to create a new node
+Node* newNode(int item) {
+    return new Node(item);
+}
+
+// Recursive function to insert a new key in BST
+Node* insertRec(Node* root, int key) {
+    // Base case: If the tree is empty, return a new node
+    if (root == nullptr)
+        return newNode(key);
+
+    // Otherwise, recur down the tree
+    if (key < root->key)
+        root->left = insertRec(root->left, key);
+    else if (key > root->key)
+        root->right = insertRec(root->right, key);
+
+    // Return the (unchanged) node pointer
+    return root;
+}
+
+// Wrapper over insertRec()
+Node* insert(Node* root, int key) {
+    return insertRec(root, key);
+}
+
+// Function to search a key in a BST
+bool search(Node* root, int key) {
+    // Base Cases: root is null or key is present at root
+    if (root == nullptr || root->key == key)
+        return root != nullptr;
+
+    // Key is greater than root's key
+    if (key > root->key)
+        return search(root->right, key);
+
+    // Key is smaller than root's key
+    return search(root->left, key);
+}
+
+// In-order traversal to print the BST
+void inOrderTraversal(Node* root) {
+    if (root != nullptr) {
+        inOrderTraversal(root->left);
+        std::cout << root->key << " ";
+        inOrderTraversal(root->right);
+    }
+}
+
+// Driver code
+int main() {
+    Node* root = nullptr;
+    
+    // Insert nodes into the BST
+    root = insert(root, 50);
+    insert(root, 30);
+    insert(root, 20);
+    insert(root, 40);
+    insert(root, 70);
+    insert(root, 60);
+    insert(root, 80);
+
+    // Print in-order traversal
+    std::cout << "In-order traversal of the BST: ";
+    inOrderTraversal(root);
+    std::cout << std::endl;
+
+    // Search for keys
+    int keyToSearch = 40;
+    if (search(root, keyToSearch))
+        std::cout << keyToSearch << " found in the BST." << std::endl;
+    else
+        std::cout << keyToSearch << " not found in the BST." << std::endl;
+
+    keyToSearch = 90;
+    if (search(root, keyToSearch))
+        std::cout << keyToSearch << " found in the BST." << std::endl;
+    else
+        std::cout << keyToSearch << " not found in the BST." << std::endl;
+
+    return 0;
+}
